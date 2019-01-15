@@ -1,0 +1,78 @@
+spring:
+  messages:
+    basename: translations
+  jackson:
+    serialization:
+     write_dates_as_timestamps: false
+  profiles:
+    active: devMysql
+  mandatory-file-encoding: utf-8 #кодировка файлов на диске(при необходимости);
+logging:
+  level:
+    ROOT: INFO
+---
+
+#порт по умолчанию;
+server:
+  port: 8080
+spring:
+  profiles: devMysql
+  jpa:
+    hibernate:
+        ddl-auto: validate
+    properties.hibernate:
+        dialect: org.hibernate.dialect.MySQL5Dialect
+        temp.use_jdbc_metadata_defaults: false
+        show_sql: true
+        format_sql: true
+        enable_lazy_load_no_trans: true #If you would like to keep Lazy Load and you are using Spring Boot
+  datasource:
+      driverClassName: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/bkob
+      username: ${DB_USER}
+      password: ${DB_PASSWORD}
+
+---
+spring:
+  profiles:
+    active: dev
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ${EMAIL_USER}
+    password: ${EMAIL_PASSWORD}
+    protocol: smtps
+
+---
+
+jwt:
+  secretKey: "somekey"
+  tokenValidityInMilliseconds: 86400000
+  tokenValidityInMillisecondsForRememberMe: 2592000000
+
+---
+upload:
+  path: E:\data
+---
+#security:
+#  oauth2:
+#    client:
+#      client-id: acme
+#      client-secret: acmesecret
+#      scope: read,write
+#      auto-approve-scopes: '.*'
+#
+#github:
+#  client:
+#    clientId: b5cca48da656d0b82708
+#    clientSecret: ${GIT_SECRET_KEY}
+#    accessTokenUri: https://github.com/login/oauth/access_token
+#    userAuthorizationUri: https://github.com/login/oauth/authorize
+#    clientAuthenticationScheme: form
+#  resource:
+#    userInfoUri: https://api.github.com/user
+#
+#logging:
+#  level:
+#    org.springframework.security: DEBUG
+#
