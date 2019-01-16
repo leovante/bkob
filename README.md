@@ -1,6 +1,8 @@
 # open source free study project
 
 [![N|Solid](https://cdn1.savepice.ru/uploads/2019/1/11/7f60ac45e4efb8b5e828bcabe30ce709-full.png)](https://cdn1.savepice.ru/uploads/2019/1/11/7f60ac45e4efb8b5e828bcabe30ce709-full.png)
+#
+[![Donate](https://cdn1.savepice.ru/uploads/2019/1/16/2368d4a1a2c425348ce112a5e16a8092-full.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HLF88JDGTX3BY)
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
