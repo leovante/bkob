@@ -105,6 +105,10 @@ ATTENTION: when you enter the social network you assigned the role of GUEST and 
 - SIGN UP
 - RECOVERY FORM
 
+# What is done ? (daily-updated)
+
+[![N|Solid](https://cdn1.savepice.ru/uploads/2019/1/16/10f446285c7dff9434747a64a65e9d36-full.png)](https://github.com/Osprey-IT/bkob/wiki/What-is-done-(daily-updated))
+
 ### What you need for study?
 
 | SOFTWARE | DOWNLOAD LINK |
