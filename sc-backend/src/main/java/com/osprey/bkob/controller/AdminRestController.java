@@ -57,16 +57,16 @@ public class AdminRestController extends AbstractBaseRestController<User> {
         return userService.getByName(name);
     }
 
-//    @ApiResponses(value = {
-//            @ApiResponse(code = 200, message = NAME_RESOURCE + " Данные получены"),
-//            @ApiResponse(code = 400, message = NAME_RESOURCE + " Неправильные параметры"),
-//            @ApiResponse(code = 404, message = NAME_RESOURCE + " Not Found")
-//    })
-//    @RequestMapping(path = "/allusers", method = RequestMethod.GET, produces = "application/bkob.app-v1.0+json")
-//    @Override
-//    public ResponseEntity<Iterable<User>>getAll() {
-//        return super.getAll();
-//    }
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = NAME_RESOURCE + " Данные получены"),
+            @ApiResponse(code = 400, message = NAME_RESOURCE + " Неправильные параметры"),
+            @ApiResponse(code = 404, message = NAME_RESOURCE + " Not Found")
+    })
+    @RequestMapping(path = "/allusers", method = RequestMethod.GET, produces = "application/bkob.app-v1.0+json")
+    @Override
+    public ResponseEntity<Iterable<User>>getAll() {
+        return super.getAll();
+    }
 
 
     @ApiResponses(value = {

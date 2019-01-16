@@ -2,7 +2,7 @@
   <div>
 
        <input  type="text" v-on="" placeholder="Username" class="input" v-model="user.username" />
-       <input readonly type="submit" value="Log in" class="input input--submit" @click.prevent="getUser"/>
+       <input readonly type="submit" value="Log in" class="input input--submit" @click.prevent=""/>
 
 <!--TODO реактивное обновление данных-->
     <table>
@@ -20,15 +20,15 @@
     </tr>
     </thead>
     <tbody>
-    <tr>
-      <td>{{response.id}}</td>
-      <td>{{response.userName}}</td>
-      <td>{{response.email}}</td>
+    <tr v-for="item in response">
+      <td>{{item.id}}</td>
+      <td>{{item.userName}}</td>
+      <td>{{item.email}}</td>
       <td>
-        <i  @click.sync="unban()" :class="response.state==='ACTIVE'? 'green':'red'   " class="material-icons button delete">mood</i>
-        <i @click.sync="ban()" :class="response.state==='BANNED'? 'red' : 'green' " class="material-icons button delete">mood_bad</i>
+        <i  @click.sync="unban(); user.id=item.id" :class="item.state==='ACTIVE'? 'green':'red'   " class="material-icons button delete">mood</i>
+        <i @click.sync="ban(); user.id=item.id" :class="item.state==='BANNED'? 'red' : 'green' " class="material-icons button delete">mood_bad</i>
         <i class="material-icons button edit ">edit</i>
-        <i @click="deleteUser()" class="material-icons button delete" >delete</i>
+        <i @click="deleteUser(); user.id=item.id" class="material-icons button delete" >delete</i>
       </td>
     </tr>
     </tbody>
@@ -49,7 +49,7 @@
       data() {
         return {
           showSearch:null,
-          response: {},
+          response: [],
           error:  false,
           user: {
             id:null,
@@ -61,42 +61,42 @@
         }
       },
 
-      // mounted(){
-      //
-      //     // AXIOS.get(`/admin/user/allusers`)
-      //     //   .then(response => {
-      //     //     // JSON responses are automatically parsed.
-      //     //     this.response = response.data;
-      //     //     //   this.user.id = response.data;
-      //     //     console.log(response.status);
-      //     //     // this.showResponse = true
-      //     //   })
-      //     //   .catch(e => {
-      //     //     this.error = true;
-      //     //   })
-      //
-      // },
+      created(){
 
-      methods:{
-        getUser(){
-          AXIOS.get(`/admin/user/byusername/` + this.user.username)
+        AXIOS.get(`/admin/user/allusers`)
             .then(response => {
               // JSON responses are automatically parsed.
               this.response = response.data;
               //   this.user.id = response.data;
               console.log(response.status);
-              // this.user.username=response.userName;
               // this.showResponse = true
             })
             .catch(e => {
               this.error = true;
-              console.log("error in get");
             })
-        },
+
+      },
+
+      methods:{
+        // getUser(){
+        //   AXIOS.get(`/admin/user/byusername/` + this.user.username)
+        //     .then(response => {
+        //       // JSON responses are automatically parsed.
+        //       this.response = response.data;
+        //       //   this.user.id = response.data;
+        //       console.log(response.status);
+        //       // this.user.username=response.userName;
+        //       // this.showResponse = true
+        //     })
+        //     .catch(e => {
+        //       this.error = true;
+        //       console.log("error in get");
+        //     })
+        // },
 
         deleteUser(){
           console.log(this.user.id);
-          AXIOS.get(`/admin/user/delete/` + this.response.id )
+          AXIOS.get(`/admin/user/delete/` + this.user.id )
             .then(response => {
               // JSON responses are automatically parsed.
 
@@ -104,32 +104,55 @@
               //   this.user.id = response.data;
               console.log(response.status);
               // this.showResponse = true
+          AXIOS.get(`/admin/user/allusers`)
+            .then(response => {
+            // JSON responses are automatically parsed.
+            this.response = response.data;
+          //   this.user.id = response.data;
+          console.log(response.status);
+          // this.showResponse = true
+        })
+        .catch(e => {
+            this.error = true;
+        })
+
             })
             .catch(e => {
               this.error = true;
             });
-          this.getUser();
+
+
         },
         unban(){
 
 
-          AXIOS.get(`/admin/user/unban/`+this.response.id)
+          AXIOS.get(`/admin/user/unban/`+this.user.id)
             .then(response => {
               // JSON responses are automatically parsed.
 
               //   this.user.id = response.data;
               console.log(response.status);
               // this.showResponse = true
-
+          AXIOS.get(`/admin/user/allusers`)
+            .then(response => {
+            // JSON responses are automatically parsed.
+            this.response = response.data;
+          //   this.user.id = response.data;
+          console.log(response.status);
+          // this.showResponse = true
+        })
+        .catch(e => {
+            this.error = true;
+        })
             })
             .catch(e => {
               this.error = true;
             });
-          this.getUser();
+
         },
         ban() {
 
-          AXIOS.get(`/admin/user/ban/`+this.response.id)
+          AXIOS.get(`/admin/user/ban/`+this.user.id)
             .then(response => {
               // JSON responses are automatically parsed.
                //   this.user.id = response.data;
@@ -137,12 +160,23 @@
               // this.showResponse = true
               //
               //
+          AXIOS.get(`/admin/user/allusers`)
+            .then(response => {
+            // JSON responses are automatically parsed.
+            this.response = response.data;
+          //   this.user.id = response.data;
+          console.log(response.status);
+          // this.showResponse = true
+        })
+        .catch(e => {
+            this.error = true;
+        })
               })
             .catch(e => {
               this.error = true;
             });
 
-          this.getUser();
+
         },
       }
     }
