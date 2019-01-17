@@ -129,6 +129,7 @@ $ mvn compile
 $ npm install
 $ cd sc-frontend
 $ npm run dev
+localhost:8585/registration
 ```
 
 ## JOIN US
