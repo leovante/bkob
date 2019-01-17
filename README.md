@@ -1,5 +1,5 @@
 # open source free study project
-![Logo](http://francky.me/images/quora001.png)
+
 
 [![N|Solid](https://cdn1.savepice.ru/uploads/2019/1/11/7f60ac45e4efb8b5e828bcabe30ce709-full.png)](https://cdn1.savepice.ru/uploads/2019/1/11/7f60ac45e4efb8b5e828bcabe30ce709-full.png)
 #
