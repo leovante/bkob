@@ -25,8 +25,8 @@
       <td>{{item.userName}}</td>
       <td>{{item.email}}</td>
       <td>
-        <i  @click.sync="unban(); user.id=item.id" :class="item.state==='ACTIVE'? 'green':'red'   " class="material-icons button delete">mood</i>
-        <i @click.sync="ban(); user.id=item.id" :class="item.state==='BANNED'? 'red' : 'green' " class="material-icons button delete">mood_bad</i>
+        <i  @click="unban(); user.id=item.id" :class="item.state==='ACTIVE'? 'green':'red'   " class="material-icons button delete">mood</i>
+        <i @click="ban(); user.id=item.id" :class="item.state==='BANNED'? 'red' : 'green' " class="material-icons button delete">mood_bad</i>
         <i class="material-icons button edit ">edit</i>
         <i @click="deleteUser(); user.id=item.id" class="material-icons button delete" >delete</i>
       </td>
@@ -98,34 +98,22 @@
           console.log(this.user.id);
           AXIOS.get(`/admin/user/delete/` + this.user.id )
             .then(response => {
-              // JSON responses are automatically parsed.
-
-
-              //   this.user.id = response.data;
               console.log(response.status);
-              // this.showResponse = true
           AXIOS.get(`/admin/user/allusers`)
             .then(response => {
-            // JSON responses are automatically parsed.
-            this.response = response.data;
-          //   this.user.id = response.data;
-          console.log(response.status);
-          // this.showResponse = true
-        })
-        .catch(e => {
-            this.error = true;
-        })
+                  this.response = response.data;
+                  console.log(response.status);
+             })
+            .catch(e => {
+                  this.error = true;
+              })
 
-            })
+              })
             .catch(e => {
               this.error = true;
             });
-
-
         },
         unban(){
-
-
           AXIOS.get(`/admin/user/unban/`+this.user.id)
             .then(response => {
               // JSON responses are automatically parsed.
