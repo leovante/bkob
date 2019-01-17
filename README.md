@@ -152,7 +152,8 @@ https://discord.gg/nVAaQJ3
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HLF88JDGTX3BY)
 
-
+# LICENSE
+[![](https://img.shields.io/badge/LICENSE-MIT-blue.svg)](https://github.com/Osprey-IT/bkob/blob/master/LICENSE)
 
 
 ### OUR THANKS TO:
