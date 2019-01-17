@@ -1,9 +1,7 @@
 package com.osprey.bkob.config.token;
 
 import com.google.common.io.BaseEncoding;
-import com.osprey.bkob.domain.entities.Token;
 import com.osprey.bkob.repository.TokensRepository;
-
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,7 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -21,7 +19,6 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -36,7 +33,7 @@ public class TokenProvider {
 
     private final TokensRepository tokensRepository;
 
-    private final UserDetailsServiceImpl userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     private static final String AUTHORITIES_KEY = "auth";
 
@@ -49,7 +46,7 @@ public class TokenProvider {
     private long tokenValidityInMillisecondsForRememberMe;
 
 
-    public TokenProvider(TokensRepository tokensRepository, UserDetailsServiceImpl userDetailsService, @Value("${jwt.secretKey}") String secretKey) {
+    public TokenProvider(TokensRepository tokensRepository, UserDetailsService userDetailsService, @Value("${jwt.secretKey}") String secretKey) {
         this.secretKey = secretKey;
         this.tokensRepository = tokensRepository;
         this.userDetailsService = userDetailsService;
@@ -62,42 +59,33 @@ public class TokenProvider {
      * Создание токина;
      * Authentication от Spring Security
      */
-    public String createToken(final Authentication authentication, final Boolean rememberMe , final Boolean save) {
-
-        String jwtToken = getToken(authentication, rememberMe);
-
-        if (! save)
-            return jwtToken;
-
-        Token token = new Token();
-        token.setTokenSession(jwtToken);
-        token.setUser((com.osprey.bkob.domain.entities.User ) authentication.getPrincipal());
-
-        tokensRepository.save(token);
-
-        return jwtToken;
-
-
+    public JWT createToken(final Authentication authentication, final Boolean rememberMe, final Boolean save) {
+        return getToken(authentication, rememberMe);
     }
 
     /**
      * Создание токина;
      * Authentication от Spring Security
      */
-    private String getToken(Authentication authentication, Boolean rememberMe) {
+    private JWT getToken(Authentication authentication, Boolean rememberMe) {
         final String roles = authentication.getAuthorities().stream() // Получаем список ролей;
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
-
         final Date validity = setLifeTimeToken(rememberMe); // Время жизни токина;
 
-        return Jwts.builder()
+        long expiration = rememberMe ? this.tokenValidityInMillisecondsForRememberMe
+                : this.tokenValidityInMilliseconds;
+
+        String token = Jwts.builder()
                 .setSubject(authentication.getName())
                 .claim(TokenProvider.AUTHORITIES_KEY, roles)
                 .signWith(SignatureAlgorithm.HS512, this.secretKeyBaseEncoding)
                 .setExpiration(validity)
                 .compact();
+
+        return JWT.builder().accessToken(token).expiresIn((int) expiration).build();
+
     }
 
     /**
@@ -111,7 +99,6 @@ public class TokenProvider {
             validity = new Date(now + this.tokenValidityInMillisecondsForRememberMe); // Mаксимальное;
         } else {
             validity = new Date(now + this.tokenValidityInMilliseconds);
-
         }
         return validity;
     }
@@ -135,27 +122,6 @@ public class TokenProvider {
         final User principal = new User(claims.getSubject(), "", authorities);    // User пользователя от Spring;
 
         return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-    }
-
-    /**
-     * Расшифровка токина используя хранилище;
-     */
-    public Authentication getAuthentication(final String token, Boolean fromStorage) {
-
-        TokenAuthentication tokenAuthentication = new TokenAuthentication(token);
-
-        Optional<Token> tokenCandidate = tokensRepository.findOneByTokenSession(token);
-
-        if (tokenCandidate.isPresent() && fromStorage) {
-            UserDetails userDetails = new UserDetailsImpl(tokenCandidate.get().getUser());
-            tokenAuthentication.setUserDetails(userDetails);
-            tokenAuthentication.setAuthenticated(true);
-            return tokenAuthentication;
-        }
-
-        tokenAuthentication.setAuthenticated(false);
-
-        return tokenAuthentication;
     }
 
     /**
