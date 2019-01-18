@@ -2,13 +2,7 @@ package com.osprey.bkob.config.security;
 
 import com.osprey.bkob.config.token.JWTConfigurer;
 import com.osprey.bkob.config.token.TokenProvider;
-//import org.springframework.beans.factory.annotation.Autowired;
-import com.osprey.bkob.config.token.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
-//import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
-//import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
-//import org.springframework.boot.context.properties.ConfigurationProperties;
-//import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -19,6 +13,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
+
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
+//import org.springframework.boot.autoconfigure.security.oauth2.resource.UserInfoTokenServices;
+//import org.springframework.boot.context.properties.ConfigurationProperties;
+//import org.springframework.boot.web.servlet.FilterRegistrationBean;
 //import org.springframework.security.oauth2.client.OAuth2ClientContext;
 //import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 //import org.springframework.security.oauth2.client.filter.OAuth2ClientAuthenticationProcessingFilter;
@@ -27,11 +29,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 //import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 //import org.springframework.web.filter.CompositeFilter;
-
-import javax.servlet.Filter;
-import javax.sql.DataSource;
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -96,8 +93,6 @@ public class SecurityConfig {
                     .csrf()
                     .disable()
                     .headers()
-                    .frameOptions()
-                    .disable()
                     .and()
                     .sessionManagement()
                     .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
