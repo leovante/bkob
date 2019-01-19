@@ -25,7 +25,7 @@
       <td>{{item.userName}}</td>
       <td>{{item.email}}</td>
       <td>
-        <i  @click="unban(); user.id=item.id" :class="item.state==='ACTIVE'? 'green':'red'   " class="material-icons button delete">mood</i>
+        <i @click="unban(); user.id=item.id" :class="item.state==='ACTIVE'? 'green':'red'   " class="material-icons button delete">mood</i>
         <i @click="ban(); user.id=item.id" :class="item.state==='BANNED'? 'red' : 'green' " class="material-icons button delete">mood_bad</i>
         <i class="material-icons button edit ">edit</i>
         <i @click="deleteUser(); user.id=item.id" class="material-icons button delete" >delete</i>
