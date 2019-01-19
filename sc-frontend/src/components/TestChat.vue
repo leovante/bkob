@@ -100,20 +100,20 @@
 
       send() {
 
-        // var params = new URLSearchParams();
-        // params.append('firstName', this.user.firstName);
+        var params = new URLSearchParams();
+        params.append('firstName', this.user.firstName);
 
-        // AXIOS.get(`/hello`, params)
-        //   .then(response => {
-        //     // JSON responses are automatically parsed.
-        //     this.response = response.data;
-        //     //   this.user.id = response.data;
-        //     console.log(response.data);
-        //     this.showResponse = true
-        //   })
-        //   .catch(e => {
-        //     this.errors.push(e)
-        //   });
+        AXIOS.get(`/hello`, params)
+          .then(response => {
+            // JSON responses are automatically parsed.
+            this.response = response.data;
+            //   this.user.id = response.data;
+            console.log(response.data);
+            this.showResponse = true
+          })
+          .catch(e => {
+            this.errors.push(e)
+          });
 
 
         console.log("Send message:" + this.send_message);
