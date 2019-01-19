@@ -126,9 +126,10 @@ ATTENTION: when you enter the social network you assigned the role of GUEST and 
 Install the dependencies and devDependencies and start the server.
 
 ```sh
+$ cd sc-backend
 $ mvn compile
-$ npm install
 $ cd sc-frontend
+$ npm install
 $ npm run dev
 #
 localhost:8585/registration
