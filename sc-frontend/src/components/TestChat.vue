@@ -70,7 +70,8 @@
 
     </div>
     <div class="message-box">
-      <textarea type="text" class="message-input" @keyup.enter="send(); send_message=null;"  v-model="send_message" placeholder="Type message..."></textarea>
+      <textarea type="text" class="message-input" v-model="send_message" placeholder="Type message..."></textarea>
+      <!--<textarea type="text" class="message-input" @keyup.enter="send(); send_message=null;"  v-model="send_message" placeholder="Type message..."></textarea>-->
       <button type="submit" class="message-submit" @click.prevent="send">Send</button>
     </div>
 
@@ -81,8 +82,11 @@
 </template>
 
 <script>
+
   import SockJS from "sockjs-client";
   import Stomp from "webstomp-client";
+
+  import {AXIOS} from "./http-common";
   export default {
     name: "websocketdemo",
     data() {
