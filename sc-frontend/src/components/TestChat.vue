@@ -53,10 +53,10 @@
 <div>
   <div class="chat">
     <div class="chat-title">
-      <h1 style="color: #ae0008">ENVADER</h1>
+      <h1 style="color: black">Bkob</h1>
       <h2>CHAT</h2>
       <figure class="avatar">
-        <img src="./../assets/envader2.png" /></figure>
+        <img src="./../assets/bkob-logo.png" /></figure>
     </div>
     <div class="messages">
 
@@ -227,9 +227,9 @@
     max-height: 500px;
     z-index: 2;
     overflow: hidden;
+    background: rgb(29, 152, 131);
     box-shadow: 0 5px 30px rgba(0, 0, 0, .2);
-    background: rgba(0, 0, 0, .5);
-    border-radius: 20px;
+     border-radius: 20px;
     display: flex;
     justify-content: space-between;
     flex-direction: column;
@@ -243,8 +243,9 @@
     flex: 0 1 45px;
     position: relative;
     z-index: 2;
-    background: rgba(102, 104, 105, 0.2);
-    color: #fff;
+    background: rgb(33, 180, 154);
+
+    color:rgb(225, 119, 121) ;
     text-transform: uppercase;
     text-align: left;
     padding: 10px 10px 10px 50px;
@@ -257,27 +258,28 @@
     }
 
     h2 {
-      color: rgba(255, 255, 255, .5);
+      color:   rgb(225, 119, 121) ;
+
       font-size: 8px;
       letter-spacing: 1px;
     }
 
     .avatar {
-      position: absolute;
+       position: absolute;
       z-index: 1;
-      top: 8px;
-      left: 9px;
+      top: 4px;
+      left: 7px;
       border-radius: 30px;
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       overflow: hidden;
       margin: 0;
-      padding: 0;
-      border: 2px solid rgba(255, 255, 255, 0.24);
-
+      padding-left:4px;
+      padding-top: 3px;
+      border: none;
       img {
-        width: 100%;
-        height: auto;
+        width: 90%;
+        height: 90%;
       }
     }
   }
@@ -415,7 +417,7 @@
   .message-box {
     flex: 0 1 40px;
     width: 100%;
-    background: rgba(102, 104, 105, 0.2);
+    background: rgb(255, 119, 121);
     padding: 10px;
     position: relative;
 
@@ -423,13 +425,13 @@
       background: none;
       border: none;
       outline: none!important;
-      resize: none;
-      color: rgba(188, 190, 191, 0.7);
-      font-size: 11px;
-      height: 17px;
+      resize:none;
+      color: red;
+      font-size: 16px;
       margin: 0;
       padding-right: 20px;
-      width: 265px;
+      width: 40%;
+
     }
 
     input {
@@ -453,7 +455,7 @@
       right: 10px;
       color: #bcbebf;
       border: none;
-      background: #666869;
+      background: red;
       font-size: 10px;
       text-transform: uppercase;
       line-height: 1;
@@ -463,7 +465,7 @@
       transition: background .2s ease;
 
       &:hover {
-        background: #69000b;
+        background: rgb(90,164,225);
       }
     }
   }
