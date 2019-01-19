@@ -1,6 +1,9 @@
 # open source free study project
 
+
 [![N|Solid](https://cdn1.savepice.ru/uploads/2019/1/11/7f60ac45e4efb8b5e828bcabe30ce709-full.png)](https://cdn1.savepice.ru/uploads/2019/1/11/7f60ac45e4efb8b5e828bcabe30ce709-full.png)
+#
+[![Donate](https://cdn1.savepice.ru/uploads/2019/1/16/2368d4a1a2c425348ce112a5e16a8092-full.png)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HLF88JDGTX3BY)
 
 [![Build Status](https://travis-ci.org/joemccann/dillinger.svg?branch=master)](https://travis-ci.org/joemccann/dillinger)
 
@@ -103,6 +106,10 @@ ATTENTION: when you enter the social network you assigned the role of GUEST and 
 - SIGN UP
 - RECOVERY FORM
 
+# What is done ? (daily-updated)
+
+[![N|Solid](https://cdn1.savepice.ru/uploads/2019/1/16/10f446285c7dff9434747a64a65e9d36-full.png)](https://github.com/Osprey-IT/bkob/wiki/What-is-done-(daily-updated))
+
 ### What you need for study?
 
 | SOFTWARE | DOWNLOAD LINK |
@@ -123,6 +130,8 @@ $ mvn compile
 $ npm install
 $ cd sc-frontend
 $ npm run dev
+#
+localhost:8585/registration
 ```
 
 ## JOIN US
@@ -143,7 +152,8 @@ https://discord.gg/nVAaQJ3
 
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=HLF88JDGTX3BY)
 
-
+# LICENSE
+[![](https://img.shields.io/badge/LICENSE-MIT-blue.svg)](https://github.com/Osprey-IT/bkob/blob/master/LICENSE)
 
 
 ### OUR THANKS TO:
