@@ -4,6 +4,7 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
+import com.osprey.bkob.domain.entities.HelloMessage;
 import com.osprey.bkob.service.MailService;
 import lombok.extern.java.Log;
 import org.apache.commons.mail.util.MimeMessageParser;
@@ -12,6 +13,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -20,14 +22,23 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.*;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.socket.WebSocketHttpHeaders;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import javax.mail.internet.MimeMessage;
 import java.net.URI;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -35,6 +46,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableWebSocketMessageBroker
+@EnableWebSocket
 @RunWith(SpringRunner.class)
 @Log
 @EnableWebSecurity
@@ -46,6 +59,8 @@ public class SecurityTest {
     MailService mailService;
     @Autowired
     TestRestTemplate testRestTemplate;
+    @Value("${local.server.port}")
+    private int port;
 
     @BeforeClass
     public static void setup() {
@@ -126,7 +141,21 @@ public class SecurityTest {
         assertThat(password, isEmptyOrNullString());
         String state = documentContext.read("$.state");
         assertThat(state, is("ACTIVE"));
+
+        WebSocketStompClient stompClient = new WebSocketStompClient(new StandardWebSocketClient());
+        stompClient.setMessageConverter(new MappingJackson2MessageConverter());
+
+        WebSocketHttpHeaders httpHeaders = new WebSocketHttpHeaders();
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
+        StompSession stompSession = stompClient.connect("ws://localhost:" + port + "/gs-guide-websocket", httpHeaders, new StompSessionHandlerAdapter() {
+        }).get(1, TimeUnit.SECONDS);
+        stompSession.send("/app/hello", new HelloMessage("some-name"));
+
+        Thread.sleep(10000);
+
+        System.out.println(stompSession.isConnected());
     }
+
 
     @TestConfiguration
     public static class Configuration {
