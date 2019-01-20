@@ -123,7 +123,7 @@
         }
       },
       connect() {
-        this.socket = new SockJS("http://localhost:8080/gs-guide-websocket");
+        this.socket = new SockJS("http://localhost:8080/gs-guide-websocket", { 'headers': { 'Authorization': this.$store.state.token}});
         this.stompClient = Stomp.over(this.socket);
         this.stompClient.connect(
           {},

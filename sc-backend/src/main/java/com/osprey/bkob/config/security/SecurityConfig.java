@@ -43,12 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .userDetailsService(detailsService)
+
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .addFilterBefore(new TokenJwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests().antMatchers("/public/login", "/public/signup", "/public/activate/**").permitAll()
                 .antMatchers("/public/**").authenticated()
                 .anyRequest().authenticated();
+
     }
 
     @Bean(name = "apiAuthManager")
@@ -67,5 +69,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public PasswordEncoder passwordencoder() {
         return new BCryptPasswordEncoder();
     }
+
 }
 

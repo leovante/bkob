@@ -20,6 +20,7 @@ public class ChatController {
             allowedHeaders={"x-auth-token", "x-requested-with", "x-xsrf-token"})
     public Greeting greeting(HelloMessage message,Authentication authentication)  throws Exception {
         Object user=SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println(user);
          return new Greeting( authentication.getName()+" : "+ HtmlUtils.htmlEscape(message.getName()) + "!");
     }
 
