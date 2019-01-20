@@ -618,7 +618,7 @@ mounted(){
           params.append('year', this.user.year),
           params.append('languages', this.user.languages)
 
-        AXIOS.post(`/public/signup`, params)
+        AXIOS.post(`/public/signup`,{data:{ params}})
           .then(response => {
             // JSON responses are automatically parsed.
             this.response = response.data;
@@ -648,9 +648,7 @@ mounted(){
           .then(response =>{
             this.$store.commit('LOGIN_TOKEN',response.data);
             console.log(this.$store.getters.token);
-            console.log(this.$store.getters.token);
-            console.log(this.$store.getters.token);
-            console.log(this.$store.getters.token);
+
           }).catch(error =>{
             console.log("Error login")
           console.log(error.message)
