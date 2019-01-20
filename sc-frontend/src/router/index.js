@@ -18,6 +18,7 @@ import UserSet from '../components/UserSet'
 import SlideTest from '../components/SlideTest'
 import Header from './../components/main/Header'
 import Authorization from '../components/Authorization'
+import CryptoExchanger from '../components/crypto/CryptoExchanger'
 
 
 
@@ -124,13 +125,15 @@ export default new Router({
       name: 'SlideTest',
       component: SlideTest
     },
-
     {
       path: '/header',
       name: 'Header',
       component: Header
     },
-
-
+    {
+      path: '/main/crypto',
+      name: 'exchanger',
+      component: CryptoExchanger
+    },
   ]
 })
