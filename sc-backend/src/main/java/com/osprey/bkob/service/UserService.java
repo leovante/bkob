@@ -7,20 +7,21 @@ import com.osprey.bkob.domain.forms.UserRegistration;
 import com.osprey.bkob.repository.BaseRepository;
 import com.osprey.bkob.repository.UserRepository;
 import com.osprey.bkob.service.common.AbstractBaseService;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-
-import java.util.Collections;
 import java.util.Optional;
-
+import java.util.logging.Level;
 
 
 @Service
+@Log
 public class UserService extends AbstractBaseService<User> {
 
 	private final PasswordEncoder passwordEncoder;
@@ -39,16 +40,19 @@ public class UserService extends AbstractBaseService<User> {
 		this.repository = userRepository;
 	}
 
+	@Transactional
 	public  boolean activateUser(String code) {
 		try {
 			User user = repository.findByActivationCode(code).get();
 			user.setActivationCode(null); // Означает что пользователь подтвердил свой почтовый ящик
-			user.setRoles(Collections.singleton(Role.JUNIOR));
+			user.getRoles().add(Role.JUNIOR);
 			user.setActive(true);
 			repository.save(user);
-		}catch (Exception ex){return false;}
-
-			return true;
+		} catch (Exception ex) {
+			log.log(Level.SEVERE, "Unable to save user", ex);
+			return false;
+		}
+		return true;
 
 	}
 	public ResponseEntity<User> getByCountry(User user, String city, String name, String phone, String skills , String about_me){
