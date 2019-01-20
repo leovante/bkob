@@ -14,8 +14,13 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Spring Security configuration
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -38,14 +43,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .userDetailsService(detailsService)
-                .antMatcher("/public/**")
-                .addFilterBefore(new TokenJwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests()
-                .antMatchers("/public/login", "/public/signup", "/public/activate/**").permitAll()
-                .anyRequest().authenticated()
-                .and();
+                .addFilterBefore(new TokenJwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests().antMatchers("/public/login", "/public/signup", "/public/activate/**").permitAll()
+                .antMatchers("/public/**").authenticated()
+                .anyRequest().authenticated();
+
     }
 
     @Bean(name = "apiAuthManager")
@@ -59,5 +64,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public UserDetailsService userDetailsService(UserRepository userRepository) {
         return new UserDetailsServiceImpl(userRepository);
     }
+
+    @Bean(name = "passwordEncoder")
+    public PasswordEncoder passwordencoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }
 

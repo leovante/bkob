@@ -4,8 +4,6 @@ spring:
   jackson:
     serialization:
      write_dates_as_timestamps: false
-  profiles:
-    active: devMysql
   mandatory-file-encoding: utf-8 #кодировка файлов на диске(при необходимости);
 logging:
   level:
@@ -34,8 +32,7 @@ spring:
 
 ---
 spring:
-  profiles:
-    active: dev
+  profiles: dev
   mail:
     host: smtp.gmail.com
     port: 465
@@ -44,7 +41,11 @@ spring:
     protocol: smtps
 
 ---
-
+spring:
+  profiles: test
+  mail:
+    username: my.gmail@local
+---
 jwt:
   secretKey: "somekey"
   tokenValidityInMilliseconds: 86400000
