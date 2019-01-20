@@ -18,6 +18,7 @@ import UserSet from '../components/UserSet'
 import SlideTest from '../components/SlideTest'
 import Header from './../components/main/Header'
 import Authorization from '../components/Authorization'
+import Exchenger from '../components/Exchanger'
 
 
 
@@ -57,6 +58,12 @@ export default new Router({
       path: '/chat',
       name: 'Chat',
       component: Chat
+    },
+
+    {
+      path: '/exchanger',
+      name: 'Exchanger',
+      component: Exchenger
     },
 
     {
