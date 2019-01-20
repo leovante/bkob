@@ -6,10 +6,11 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
+//TODO: make DTO
 public class UserRegistration extends User  {
 
       @Email(message = "Email is not correct")
@@ -24,7 +25,7 @@ public class UserRegistration extends User  {
       @NotBlank(message = "Password cannot be empty")
       private String country;
       @NotBlank(message = "Password cannot be empty")
-      private ArrayList<String> languages;
+      private List<String> languages;
       @NotBlank(message = "Password cannot be empty")
       private Short day;
       @NotBlank(message = "Password cannot be empty")

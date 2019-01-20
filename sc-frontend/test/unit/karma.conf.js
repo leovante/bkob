@@ -14,7 +14,7 @@ module.exports = function karmaConfig (config) {
     browsers: ['PhantomJS'],
     frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
     reporters: ['spec', 'coverage'],
-    files: ['./index.js'],
+    files: ['./store.js'],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']
     },

@@ -22,6 +22,17 @@ target
 *.iml
 *.log
 
+.idea/
+.gradle/
+.settings/
+.project
+.classpath
+out/
+/bin/
+build/
+/logs/
+
+
 # logback
 logback.out.xml
 

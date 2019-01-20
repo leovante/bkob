@@ -1,7 +1,6 @@
 package com.osprey.bkob.controller;
-import com.osprey.bkob.domain.entities.User;
-import com.osprey.bkob.domain.forms.UserRegistration;
 
+import com.osprey.bkob.domain.forms.UserRegistration;
 import com.osprey.bkob.repository.UserRepository;
 import com.osprey.bkob.service.UserService;
 import com.osprey.bkob.service.signupService.SignUpService;
@@ -10,7 +9,6 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import static com.osprey.bkob.controller.SingUpRestController.NAME_RESOURCE;
@@ -46,7 +44,8 @@ public class SingUpRestController {
     })
 
     @RequestMapping(path = "/signup", method = RequestMethod.POST, produces = "application/bkob.app-v1.0+json")
-    public ResponseEntity<Object> signUp(UserRegistration userRegistration) {
+
+    public ResponseEntity<Object> signUp( UserRegistration userRegistration) {
 
         boolean bol =repo.findByEmail(userRegistration.getEmail()).isPresent() || !repo.findByuserName(userRegistration.getUserName()).isPresent();
         System.out.println(bol);
