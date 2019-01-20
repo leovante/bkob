@@ -635,7 +635,6 @@ mounted(){
             console.log(this.signError);
           });
       },
-
       loginUser() {
         var params = new URLSearchParams();
         params.append('email', this.user.email),
@@ -645,19 +644,22 @@ mounted(){
           params.append('rememberMe', this.rememberMe.toString()),
             console.log(this.rememberMe.toString())
 
+        AXIOS.post(`/public/login`,params)
+          .then(response =>{
+            this.$store.commit('LOGIN_TOKEN',response.data);
+            console.log(this.$store.getters.token);
+            console.log(this.$store.getters.token);
+            console.log(this.$store.getters.token);
+            console.log(this.$store.getters.token);
+          }).catch(error =>{
+            console.log("Error login")
+          console.log(error.message)
+            })
 
 
-          AXIOS.post(`/public/login`, params)
-            .then(response => {
-              // JSON responses are automatically parsed.
-              this.response = response.data;
-              //   this.user.id = response.data;
-              console.log(response.status);
-              // this.showResponse = true
-            })
-            .catch(e => {
-              this.logError=true;
-            })
+
+
+
 
       },
 

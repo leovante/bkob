@@ -1,41 +1,52 @@
 package com.osprey.bkob.controller;
 
-import com.osprey.bkob.config.token.JWTConfigurer;
-import com.osprey.bkob.config.token.JWTToken;
+import com.osprey.bkob.config.token.AuthToken;
 import com.osprey.bkob.domain.forms.UserLogin;
+import com.osprey.bkob.dto.UserDto;
+import com.osprey.bkob.repository.UserRepository;
 import com.osprey.bkob.service.signupService.LoginService;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+
+import static com.osprey.bkob.controller.SingUpRestController.NAME_RESOURCE;
 
 /**
  * Получение Token по UserLogin(пользователь и пароль);
  */
-import static com.osprey.bkob.controller.SingUpRestController.NAME_RESOURCE;
 @RestController
 @RequestMapping("/public/")
 public class LoginRestController {
-    private String loginUser;
     private final LoginService loginService;
 
-    public LoginRestController(LoginService loginService) {
+    private final UserRepository userRepository;
+
+    public LoginRestController(LoginService loginService, UserRepository userRepository) {
         this.loginService = loginService;
+        this.userRepository = userRepository;
     }
 
     /**
      * Проверить полученого пользователя;
      */
-    @GetMapping("/login")
-    public String isAuthenticated(final @RequestBody HttpServletRequest request) {
-        this.loginUser = request.getRemoteUser();
-        System.out.println("HHHHHHH:" + loginUser);
-        return request.getRemoteUser();
+    @GetMapping("/currentUser")
+    public UserDto isAuthenticated(final HttpServletRequest request) {
+        String userName = ((User) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal()).getUsername();
+        com.osprey.bkob.domain.entities.User user = userRepository.findByEmail(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User " + userName + " not found"));
+        return UserDto.builder().email(user.getEmail()).state(user.getState()).build();
     }
 
     /**
@@ -48,14 +59,14 @@ public class LoginRestController {
     })
 
     @RequestMapping(path = "/login", method = RequestMethod.POST, produces = "application/bkob.app-v1.0+json")
-    public ResponseEntity<JWTToken> login( UserLogin userLogin) {
-            final String jwt = loginService.createToken(userLogin);
-            final HttpHeaders httpHeaders = new HttpHeaders();
-        if (jwt.equals("null")) {
-            return new ResponseEntity<JWTToken>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<AuthToken> login(UserLogin userLogin) {
+        final AuthToken token = loginService.createToken(userLogin);
+        final HttpHeaders httpHeaders = new HttpHeaders();
+        if (token == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }else{
-            httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, "Bearer " + jwt);
-            return new ResponseEntity<>(new JWTToken(jwt), httpHeaders, HttpStatus.OK);
+            httpHeaders.add(HttpHeaders.AUTHORIZATION, "Bearer " + token.getAccessToken());
+            return new ResponseEntity<>(token, httpHeaders, HttpStatus.OK);
         }
     }
 

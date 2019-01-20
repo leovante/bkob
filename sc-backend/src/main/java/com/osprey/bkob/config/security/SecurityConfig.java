@@ -1,18 +1,26 @@
 package com.osprey.bkob.config.security;
 
-import com.osprey.bkob.config.token.JWTConfigurer;
+import com.osprey.bkob.config.token.TokenJwtFilter;
 import com.osprey.bkob.config.token.TokenProvider;
+
 import org.springframework.beans.factory.annotation.Qualifier;
+
+import com.osprey.bkob.config.token.UserDetailsServiceImpl;
+import com.osprey.bkob.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
+import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 
 import javax.sql.DataSource;
 
@@ -30,37 +38,31 @@ import javax.sql.DataSource;
 //import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 //import org.springframework.web.filter.CompositeFilter;
 
+
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+/**
+ * Spring Security configuration
+ */
+
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final UserDetailsService detailsService;
-    private final PasswordEncoder passwordEncoder;
-    private final DataSource dataSource;
-    private final TokenProvider tokenProvider;
+    private UserDetailsService detailsService;
 
-    public SecurityConfig(@Qualifier("userDetailsServiceImpl") UserDetailsService detailsService,
-                          PasswordEncoder passwordEncoder,
-                          @Qualifier("dataSource") DataSource dataSource,
-                          TokenProvider tokenProvider) {
+    private TokenProvider tokenProvider;
+
+    @Autowired
+    public void setDetailsService(UserDetailsService detailsService) {
         this.detailsService = detailsService;
-        this.passwordEncoder = passwordEncoder;
-        this.dataSource = dataSource;
+    }
+
+    @Autowired
+    public void setTokenProvider(TokenProvider tokenProvider) {
         this.tokenProvider = tokenProvider;
     }
 
-    /**
-     * Конфигурация безопасности для URL(Rest);
-     */
-    @Configuration
-    public static class FormLoginConfigurationAdapter extends WebSecurityConfigurerAdapter {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http.antMatcher("/form/**").authorizeRequests().anyRequest().authenticated()
-                    .and().formLogin().permitAll().loginPage("/public/login").loginProcessingUrl("/form/login")
-                    .and().logout().logoutUrl("/form/logout").invalidateHttpSession(true).logoutSuccessUrl("/");
-        }
-    }
 
 //    @Order(67) // LOWEST
 //    @Configuration
@@ -82,102 +84,36 @@ public class SecurityConfig {
 //    }
    // ApiWebSecurityConfigurationAdapter
 
-    @Configuration
-    @Order(1)
-    public class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
-        @Override
-        protected void configure(HttpSecurity http) throws Exception {
-            http
-                    .userDetailsService(detailsService)
-                    .antMatcher("/api/**")
-                    .csrf()
-                    .disable()
-                    .headers()
-                    .and()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                    .and()
-                    .authorizeRequests()
-                    .antMatchers("/api/public/** /api/** /public/login/** /admin/user/delete/**" ).permitAll()
-                    .anyRequest().authenticated()
-                    .and()
-                    .apply(this.securityConfigurerAdapter());
+   
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .userDetailsService(detailsService)
+                .csrf().disable()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .addFilterBefore(new TokenJwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests().antMatchers("/public/login", "/public/signup", "/public/activate/**").permitAll()
+                .antMatchers("/public/**").authenticated()
+                .anyRequest().authenticated();
 
-        }
-
-        private JWTConfigurer securityConfigurerAdapter() {
-            return new JWTConfigurer(SecurityConfig.this.tokenProvider);
-        }
-
-//        @Bean
-//        public RequestContextListener requestContextListener() {
-//            return new RequestContextListener();
-//        }
-
-        @Bean(name = "apiAuthManager")
-        @Override
-        public AuthenticationManager authenticationManagerBean() throws Exception {
-            return super.authenticationManagerBean();
-        }
     }
 
+    @Bean(name = "apiAuthManager")
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
+    }
 
-//    @Configuration
-//    @EnableOAuth2Sso
-//    public class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-//
-//        @Override
-//        protected void configure(HttpSecurity http) throws Exception {
-//            // @formatter:off
-//            http.antMatcher("/**").authorizeRequests().antMatchers("/", "/login**", "/webjars/**", "/error**").permitAll().anyRequest()
-//                    .authenticated().
-//                    and().
-//                    exceptionHandling()
-//                    .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/")).and().logout()
-//                    .logoutSuccessUrl("/").permitAll()
-//                    .and().
-//                    csrf()
-//                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//                    .and()
-//                    .addFilterBefore(ssoFilter(), BasicAuthenticationFilter.class);
-//            // @formatter:on
-//        }
-//
-//
-//        @Bean
-//        public FilterRegistrationBean<OAuth2ClientContextFilter> oauth2ClientFilterRegistration(OAuth2ClientContextFilter filter) {
-//            FilterRegistrationBean<OAuth2ClientContextFilter> registration = new FilterRegistrationBean<OAuth2ClientContextFilter>();
-//            registration.setFilter(filter);
-//            registration.setOrder(-100);
-//            return registration;
-//        }
-//
-//        @Bean
-//        @ConfigurationProperties("github")
-//        public ClientResources github() {
-//            return new ClientResources();
-//        }
-//
-//        private Filter ssoFilter() {
-//            CompositeFilter filter = new CompositeFilter();
-//            List<Filter> filters = new ArrayList<>();
-//            filters.add(ssoFilter(github(), "/login/github"));
-//            filter.setFilters(filters);
-//            return filter;
-//        }
-//
-//        private Filter ssoFilter(ClientResources client, String path) {
-//            OAuth2ClientAuthenticationProcessingFilter oAuth2ClientAuthenticationFilter = new OAuth2ClientAuthenticationProcessingFilter(path);
-//            OAuth2RestTemplate oAuth2RestTemplate = new OAuth2RestTemplate(client.getClient(), oauth2ClientContext);
-//            oAuth2ClientAuthenticationFilter.setRestTemplate(oAuth2RestTemplate);
-//            UserInfoTokenServices tokenServices = new UserInfoTokenServices(client.getResource().getUserInfoUri(),
-//                    client.getClient().getClientId());
-//            tokenServices.setRestTemplate(oAuth2RestTemplate);
-//            oAuth2ClientAuthenticationFilter.setTokenServices(tokenServices);
-//            return oAuth2ClientAuthenticationFilter;
-//
-//        }
+    @Bean
+    @Primary
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return new UserDetailsServiceImpl(userRepository);
+    }
 
-//    }
+    @Bean(name = "passwordEncoder")
+    public PasswordEncoder passwordencoder() {
+        return new BCryptPasswordEncoder();
+    }
+
 }
 

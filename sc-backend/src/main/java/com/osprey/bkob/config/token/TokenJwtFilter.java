@@ -1,6 +1,7 @@
 package com.osprey.bkob.config.token;
 
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
@@ -42,7 +43,7 @@ public class TokenJwtFilter extends GenericFilterBean {
      */
     private String resolveToken(HttpServletRequest request) {
         //знаходить параметр"Authorization"
-        String bearerToken = request.getHeader(JWTConfigurer.AUTHORIZATION_HEADER);
+        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7, bearerToken.length());
         }

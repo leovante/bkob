@@ -1,5 +1,6 @@
 package com.osprey.bkob.service.signupService;
 
+import com.osprey.bkob.config.token.AuthToken;
 import com.osprey.bkob.config.token.TokenProvider;
 import com.osprey.bkob.domain.forms.UserLogin;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -7,7 +8,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 /**
  * Процедура Authentication;
@@ -24,9 +24,8 @@ public class LoginServiceImpl  implements LoginService {
         this.authenticationManager = authenticationManager;
     }
 
-
     @Override
-    public String createToken(UserLogin userLogin) {
+    public AuthToken createToken(UserLogin userLogin) {
         final UsernamePasswordAuthenticationToken authToken =
                 new UsernamePasswordAuthenticationToken(userLogin.getEmail(), userLogin.getPassword());
         try{
@@ -37,7 +36,7 @@ public class LoginServiceImpl  implements LoginService {
 
             return this.tokenProvider.createToken(authentication, rememberMe, false);
         }catch (Exception ex){
-            return "null";
+            return null;
         }
 
 
