@@ -646,8 +646,10 @@ mounted(){
 
         AXIOS.post(`/public/login`,params)
           .then(response =>{
-            this.$store.commit('LOGIN_TOKEN',response.data)
-
+            this.$store.commit('LOGIN_TOKEN',response.data);
+            console.log(this.$store.getters.token);
+            console.log(this.$store.getters.token);
+            console.log(this.$store.getters.token);
             console.log(this.$store.getters.token);
           }).catch(error =>{
             console.log("Error login")

@@ -180,12 +180,11 @@
     methods:{
       setDone(){
         this.done=true;
+        console.log(this.$store.getters.token);
       },
 
     },
-
     mounted(){
-
       setTimeout(this.setDone, 5500);
     }
   }
