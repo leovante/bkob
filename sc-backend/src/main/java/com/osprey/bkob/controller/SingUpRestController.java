@@ -43,7 +43,7 @@ public class SingUpRestController {
             @ApiResponse(code = 404, message = NAME_RESOURCE + " Not Found")
     })
 
-    @RequestMapping(path = "/signup", method = RequestMethod.POST, produces = "application/bkob.app-v1.0+json")
+    @RequestMapping(path = "/signup", method = RequestMethod.POST, produces = "application/json")
 
 
     public ResponseEntity<Object> signUp(@RequestBody UserRegistration userRegistration) {

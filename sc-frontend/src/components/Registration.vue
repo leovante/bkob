@@ -608,29 +608,40 @@ mounted(){
 
       // Fetches posts when the component is created.
       createUser() {
-        var params = new URLSearchParams();
-          params.append('username', this.info[0].value),
-          params.append('email', this.info[1] .value),
-          params.append('password', this.info[2].value),
-          params.append('country', this.user.country),
-          params.append('day', this.user.day),
-          params.append('month', this.user.month),
-          params.append('year', this.user.year),
-          params.append('languages', this.user.languages)
+          //
+          // params.append('username', this.info[0].value),
+          // params.append('email', this.info[1] .value),
+          // params.append('password', this.info[2].value),
+          // params.append('country', this.user.country),
+          // params.append('day', this.user.day),
+          // params.append('month', this.user.month),
+          // params.append('year', this.user.year),
+          // params.append('languages', this.user.languages)
 
-        AXIOS.post(`/public/signup`,{data:{ params}})
+        AXIOS.post(`/public/signup`,{data:{'username': this.info[0].value,
+                                            'email': this.info[1] .value ,
+            'password': this.info[2].value,
+            'country': this.user.country,
+            'day': this.user.day,
+            'month': this.user.month,
+            'year': this.user.year,
+            'languages': this.user.languages
+        }})
           .then(response => {
             // JSON responses are automatically parsed.
             this.response = response.data;
-
+            console.log(params);
             // this.user.id = response.data;
             console.log(response.data);
             this.showResponse = true
           })
-          //   .then(router => {
+          //   .then(router => {console.log(params);
           //   this.$router.push('Chat')
+
           // })
           .catch(e => {
+
+            console.log(this.$store.getters.token);
             this.signError=true;
             console.log(this.signError);
           });
