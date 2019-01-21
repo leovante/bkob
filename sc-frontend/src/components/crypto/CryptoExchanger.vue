@@ -34,15 +34,15 @@
         data: []
       }
     },
-    created() {
-      this.getCurrencyRow('btc-usd');
-      this.getCurrencyRow('xrp-usd');
-      this.getCurrencyRow('eos-usd');
-    },
-    methods: {
+   mounted() {
+        this.getCurrencyRow('btc-usd');
+        this.getCurrencyRow('xrp-usd');
+        this.getCurrencyRow('eos-usd');
+      },
+      methods: {
       getCurrencyRow(currency) {
         AXIOS.get('https://api.cryptonator.com/api/ticker/' + currency)
-          .then(response => {
+            .then(response => {
             let result = response.data.ticker;
             let change = parseFloat(result.change).toFixed(3);
             change = change > 0 ? '+' + change : change;
