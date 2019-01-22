@@ -618,7 +618,7 @@ mounted(){
           // params.append('year', this.user.year),
           // params.append('languages', this.user.languages)
 
-        AXIOS.post(`/public/signup`,{data:{'username': this.info[0].value,
+        AXIOS.post(`/public/signup`,{'username': this.info[0].value,
                                             'email': this.info[1] .value ,
             'password': this.info[2].value,
             'country': this.user.country,
@@ -626,7 +626,7 @@ mounted(){
             'month': this.user.month,
             'year': this.user.year,
             'languages': this.user.languages
-        }})
+        })
           .then(response => {
             // JSON responses are automatically parsed.
             this.response = response.data;

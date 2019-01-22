@@ -46,7 +46,7 @@ public class SingUpRestController {
     @RequestMapping(path = "/signup", method = RequestMethod.POST, produces = "application/json")
 
 
-    public ResponseEntity<Object> signUp(@RequestBody UserRegistration userRegistration) {
+    public ResponseEntity<Object> signUp( UserRegistration userRegistration) {
 
         boolean bol =repo.findByEmail(userRegistration.getEmail()).isPresent() || !repo.findByuserName(userRegistration.getUserName()).isPresent();
         System.out.println(bol);

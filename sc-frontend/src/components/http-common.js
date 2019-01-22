@@ -4,8 +4,4 @@ axios.defaults.headers.post['Content-Type'] = 'application/json;odata=verbose;ch
 
 export const AXIOS = axios.create({
   baseURL: 'http://localhost:8080/',
-headers: {
-  Authorization: 'Bearer {LOGIN_TOKEN}'
-
-}
 })
